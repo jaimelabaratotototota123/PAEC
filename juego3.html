@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Memorama de Reciclaje Tecnológico</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e8f5e9;
+      text-align: center;
+    }
+
+    h1 {
+      color: #2e7d32;
+    }
+
+    .tablero {
+      display: grid;
+      grid-template-columns: repeat(4, 120px);
+      gap: 15px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .carta {
+      width: 100px;
+      height: 100px;
+      background-color: #a5d6a7;
+      border: 2px solid #388e3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 10px;
+    }
+
+    .carta.revelada {
+      background-color: #2e7d32;
+    }
+
+    .carta.acertada {
+      background-color: #81c784;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+<a href="index.html">inicio</a>
+  <h1>🧠 Memorama: Reciclaje Tecnológico</h1>
+  <p>Haz clic en dos cartas para encontrar los pares correctos.</p>
+
+  <div class="tablero" id="tablero"></div>
+
+  <script>
+    const pares = [
+      { contenido: 'Celular roto', categoria: 'Reciclable' },
+      { contenido: 'Reciclable', categoria: 'Celular roto' },
+
+      { contenido: 'Mouse funcional', categoria: 'Reutilizable' },
+      { contenido: 'Reutilizable', categoria: 'Mouse funcional' },
+
+      { contenido: 'Batería vieja', categoria: 'Desecho' },
+      { contenido: 'Desecho', categoria: 'Batería vieja' },
+
+      { contenido: 'Monitor roto', categoria: 'Reciclable' },
+      { contenido: 'Reciclable', categoria: 'Monitor roto' }
+    ];
+
+    let seleccionadas = [];
+    let tablero = document.getElementById('tablero');
+
+    // Mezclar cartas
+    const cartas = [...pares].sort(() => 0.5 - Math.random());
+
+    cartas.forEach((par, index) => {
+      const carta = document.createElement('div');
+      carta.classList.add('carta');
+      carta.dataset.valor = par.categoria;
+      carta.textContent = '?';
+      carta.dataset.index = index;
+
+      carta.addEventListener('click', () => {
+        if (carta.classList.contains('revelada') || carta.classList.contains('acertada') || seleccionadas.length === 2) return;
+
+        carta.classList.add('revelada');
+        carta.textContent = par.contenido;
+        seleccionadas.push(carta);
+
+        if (seleccionadas.length === 2) {
+          const [c1, c2] = seleccionadas;
+          if (
+            c1.dataset.valor === c2.textContent || 
+            c2.dataset.valor === c1.textContent
+          ) {
+            c1.classList.add('acertada');
+            c2.classList.add('acertada');
+          } else {
+            setTimeout(() => {
+              c1.classList.remove('revelada');
+              c2.classList.remove('revelada');
+              c1.textContent = '?';
+              c2.textContent = '?';
+            }, 1000);
+          }
+          seleccionadas = [];
+        }
+      });
+
+      tablero.appendChild(carta);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sopa de Letras: Las 3 R</title>
+  <style>
+    body {
+background-color: #eafaf1;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 40px);
+      justify-content: center;
+      gap: 5px;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      border: 1px solid #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .selected {
+      background-color: yellow;
+    }
+    #palabras {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<a href="index.html">inicio</a>
+  <h1>Sopa de Letras: Las 3 R de la Tecnología</h1>
+  <p>Palabras a encontrar: <strong>REDUCIR, REUTILIZAR, RECICLAR</strong></p>
+
+  <div class="grid" id="sopa"></div>
+
+  <div id="palabras">
+    <p><strong>Palabra actual:</strong> <span id="actual"></span></p>
+    <p><strong>Encontradas:</strong> <span id="encontradas"></span></p>
+  </div>
+
+  <script>
+    const palabrasObjetivo = ["REDUCIR", "REUTILIZAR", "RECICLAR"];
+    const abecedario = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    
+    const letras = [
+      "R", "E", "D", "U", "C", "I", "R", "X", "X", "X",
+      "X", "R", "E", "U", "T", "I", "L", "I", "Z", "A",
+      "R", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+      "R", "E", "C", "I", "C", "L", "A", "R", "X", "X",
+      "X", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+      "X", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+      "X", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+      "X", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+      "X", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+      "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"
+    ];
+
+    const sopa = document.getElementById("sopa");
+    const actual = document.getElementById("actual");
+    const encontradas = document.getElementById("encontradas");
+
+    let seleccion = "";
+    let encontradasLista = [];
+
+    // Reemplazar X por letras aleatorias
+    const letrasFinales = letras.map(letra => {
+      return letra === "X" ? abecedario.charAt(Math.floor(Math.random() * abecedario.length)) : letra;
+    });
+
+    letrasFinales.forEach((letra, index) => {
+      const div = document.createElement("div");
+      div.textContent = letra;
+      div.className = "cell";
+      div.dataset.index = index;
+      div.addEventListener("click", () => {
+        if (!div.classList.contains("selected")) {
+          div.classList.add("selected");
+          seleccion += letra;
+          actual.textContent = seleccion;
+
+          if (palabrasObjetivo.includes(seleccion)) {
+            alert(`¡Encontraste la palabra "${seleccion}"!`);
+            encontradasLista.push(seleccion);
+            encontradas.textContent = encontradasLista.join(", ");
+            seleccion = "";
+            actual.textContent = "";
+            document.querySelectorAll(".selected").forEach(c => c.classList.remove("selected"));
+          }
+        }
+      });
+      sopa.appendChild(div);
+    });
+  </script>
+
+</body>
+</html>
